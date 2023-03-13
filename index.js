@@ -111,7 +111,8 @@ class Handler {
 
 async function requireUncached(module, event, client, utils) {
     utils = utils ? utils : {};
-    utils['require'] = getModule;
+    utils['require'] = _require;
+    utils['getModule'] = getModule;
     utils['sleep'] = sleep;
 
     try {
@@ -126,6 +127,15 @@ async function getModule(module) {
     try {
         delete require.cache[require.resolve(process.cwd() + module)];
         return require(process.cwd() + module);
+    } catch (e) {
+        console.error(e.message);
+    }
+}
+
+async function _require(module) {
+    try {
+        delete require.cache[require.resolve(module)];
+        return require(module);
     } catch (e) {
         console.error(e.message);
     }
