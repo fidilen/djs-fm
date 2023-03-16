@@ -65,7 +65,7 @@ class Handler {
     }
 
     async prefix(event, client, utils) {
-        if (event.author.id == client.user.id) return;
+        if (event.author.id == client.user.id || event.author.bot) return;
 
         const prefix = event.content?.split(' ')?.shift();
         const handler = this.json_handlers?.MESSAGE_CREATE?.PREFIX;
@@ -76,7 +76,7 @@ class Handler {
     }
 
     async channel(event, client, utils) {
-        if (event.author.id == client.user.id) return;
+        if (event.author.id == client.user.id || event.author.bot) return;
 
         const channel = event.channelId;
         const handler = this.json_handlers?.MESSAGE_CREATE?.CHANNEL;
@@ -87,7 +87,7 @@ class Handler {
     }
 
     async mention(event, client, utils) {
-        if (event.author.id == client.user.id) return;
+        if (event.author.id == client.user.id || event.author.bot) return;
 
         if (event.mentions?.users?.size == 0) return;
 
