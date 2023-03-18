@@ -8,6 +8,14 @@ const InteractionType = {
     "5": { name: "MODAL_SUBMIT", key: "customId" }
 };
 
+// https://discord.com/developers/docs/resources/channel
+const ChannelType = {
+    "GUILD_TEXT": 0,
+    "DM": 1,
+    "PUBLIC_THREAD": 11,
+    "PRIVATE_THREAD": 12
+};
+
 //---------- Command Builder 
 class CommandBuilder {
     constructor(bot_token, client_id, REST, Routes) {
@@ -105,6 +113,28 @@ class Handler {
             if (handler[id]) {
                 await requireUncached(handler[id], event, client, utils);
             }
+        }
+    }
+
+    async dm(event, client, utils) {
+        if (event.author.id == client.user.id || event.author.bot) return;
+
+        if (!event.channel.isDMBased()) return;
+
+        const handler = this.json_handlers?.MESSAGE_CREATE?.DM;
+
+        if (handler) {
+            await requireUncached(handler, event, client, utils);
+        }
+    }
+
+    async bot(event, client, utils) {
+        if (!event.author.bot) return;
+
+        const handler = this.json_handlers?.MESSAGE_CREATE?.BOT;
+
+        if (handler) {
+            await requireUncached(handler, event, client, utils);
         }
     }
 }
