@@ -52,6 +52,12 @@ class Handler {
         this.json_handlers = require(process.cwd() + json_handlers);
     }
 
+    async generic(key, event, client, utils) {
+        if (this.json_handlers[key]) {
+            await requireUncached(this.json_handlers[key], event, client, utils);
+        }
+    }
+
     async interaction(interaction, client, utils) {
         const type = InteractionType[interaction.type];
         const handler = type.name;
