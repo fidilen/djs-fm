@@ -54,7 +54,7 @@ class Handler {
 
     async generic(key, event, client, utils) {
         if (this.json_handlers[key]) {
-            await requireUncached(this.json_handlers[key], event, client, utils);
+            await requireParams(this.json_handlers[key], event, client, utils);
         }
     }
 
@@ -64,7 +64,7 @@ class Handler {
         const id = interaction[type.key];
 
         if (handler && id && this.json_handlers[handler] && this.json_handlers[handler][id]) {
-            await requireUncached(this.json_handlers[handler][id], interaction, client, utils);
+            await requireParams(this.json_handlers[handler][id], interaction, client, utils);
         }
     }
 
@@ -74,7 +74,7 @@ class Handler {
         const handler = this.json_handlers?.MESSAGE_CREATE?.ALL;
 
         if (handler) {
-            await requireUncached(handler, event, client, utils);
+            await requireParams(handler, event, client, utils);
         }
     }
 
@@ -85,7 +85,7 @@ class Handler {
         const handler = this.json_handlers?.MESSAGE_CREATE?.PREFIX;
 
         if (handler && handler[prefix]) {
-            await requireUncached(handler[prefix], event, client, utils);
+            await requireParams(handler[prefix], event, client, utils);
         }
     }
 
@@ -96,7 +96,7 @@ class Handler {
         const handler = this.json_handlers?.MESSAGE_CREATE?.CHANNEL;
 
         if (handler && handler[channel]) {
-            await requireUncached(handler[channel], event, client, utils);
+            await requireParams(handler[channel], event, client, utils);
         }
     }
 
@@ -117,7 +117,7 @@ class Handler {
 
         for (let id of mentions) {
             if (handler[id]) {
-                await requireUncached(handler[id], event, client, utils);
+                await requireParams(handler[id], event, client, utils);
             }
         }
     }
@@ -130,7 +130,7 @@ class Handler {
         const handler = this.json_handlers?.MESSAGE_CREATE?.DM;
 
         if (handler) {
-            await requireUncached(handler, event, client, utils);
+            await requireParams(handler, event, client, utils);
         }
     }
 
@@ -140,19 +140,18 @@ class Handler {
         const handler = this.json_handlers?.MESSAGE_CREATE?.BOT;
 
         if (handler) {
-            await requireUncached(handler, event, client, utils);
+            await requireParams(handler, event, client, utils);
         }
     }
 }
 
-async function requireUncached(module, event, client, utils) {
+async function requireParams(module, event, client, utils) {
     utils = utils ? utils : {};
     utils['require'] = _require;
     utils['getModule'] = getModule;
     utils['sleep'] = sleep;
 
     try {
-        delete require.cache[require.resolve(process.cwd() + module)];
         return require(process.cwd() + module)(event, client, utils);
     } catch (e) {
         console.error(e.message);
@@ -161,7 +160,6 @@ async function requireUncached(module, event, client, utils) {
 
 async function getModule(module) {
     try {
-        delete require.cache[require.resolve(process.cwd() + module)];
         return require(process.cwd() + module);
     } catch (e) {
         console.error(e.message);
@@ -170,7 +168,6 @@ async function getModule(module) {
 
 async function _require(module) {
     try {
-        delete require.cache[require.resolve(module)];
         return require(module);
     } catch (e) {
         console.error(e.message);
