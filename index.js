@@ -143,6 +143,26 @@ class Handler {
             await requireParams(handler, event, client, utils);
         }
     }
+
+    async reactionAdd(event, user, client, utils) {
+        if (user.bot) return;
+
+        const handler = this.json_handlers?.MESSAGE_REACTION_ADD;
+
+        if (handler) {
+            await requireParams(handler, { reaction: event, user: user }, client, utils);
+        }
+    }
+
+    async reactionDelete(event, user, client, utils) {
+        if (user.bot) return;
+
+        const handler = this.json_handlers?.MESSAGE_REACTION_DELETE;
+
+        if (handler) {
+            await requireParams(handler, { reaction: event, user: user }, client, utils);
+        }
+    }
 }
 
 async function requireParams(module, event, client, utils) {

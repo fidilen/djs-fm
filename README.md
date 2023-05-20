@@ -4,15 +4,17 @@ DiscordJS File Manager
 ## Preview
 ```js
 require("dotenv").config();
-const { Client, GatewayIntentBits, REST, Routes, Events } = require("discord.js");
+const { Client, GatewayIntentBits, REST, Routes, Events, Partials } = require("discord.js");
 const { CommandBuilder, Handler } = require('djs-fm');
 
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions
+  ],
+	partials: [Partials.Message, Partials.Channel, Partials.Reaction], // For Reaction events
 });
 
 const commandBuiler = new CommandBuilder(process.env.DISCORD_BOT_TOKEN, process.env.CLIENT_ID, REST, Routes);
@@ -32,8 +34,12 @@ client.on(Events.MessageCreate, async (event) => {
   await handler.prefix(event, client);
 });
 
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+  await handler.reactionAdd(reaction, user, client);
+});
+
 client.login(process.env['DISCORD_BOT_TOKEN']);
 ```
 
 ## Interested?
-Contact the developer via [Discord](https://discord.gg/Urt5S2Ucju).
+Contact the developer via [Discord](https://fidilen.com/discord).
