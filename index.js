@@ -46,7 +46,7 @@ class CommandBuilder {
     }
 }
 
-//---------- Command Builder 
+//---------- Handler 
 class Handler {
     constructor(json_handlers) {
         this.json_handlers = require(process.cwd() + json_handlers);
@@ -165,6 +165,38 @@ class Handler {
     }
 }
 
+//---------- Utils
+const Utils = {
+    splitMessage: function (message, limit = 2000) {
+        let content = [];
+
+        while (message.length > limit) {
+            let index = getSplitIndex(message, limit);
+
+            content.push(message.substring(0, index));
+
+            message = message.substring(index + (index < message.length && message[index] === '\n' ? 1 : 0), message.length);
+        }
+
+        content.push(message);
+
+        return content;
+    }
+}
+
+//---------- functions
+function getSplitIndex(string, limit) {
+    let index = string.substring(0, limit).lastIndexOf('\n\n');
+
+    if (index <= 0) index = string.substring(0, limit).lastIndexOf('\n');
+    if (index <= 0) index = string.substring(0, limit - 1).lastIndexOf('.') + 1;
+    if (index <= 0) index = string.substring(0, limit - 1).lastIndexOf(',') + 1;
+    if (index <= 0) index = string.substring(0, limit - 1).lastIndexOf(' ') + 1;
+    if (index <= 0) index = limit;
+
+    return index;
+}
+
 async function requireParams(module, event, client, utils) {
     utils = utils ? utils : {};
     utils['require'] = _require;
@@ -202,4 +234,4 @@ async function sleep(ms) {
     });
 }
 
-module.exports = { CommandBuilder, Handler };
+module.exports = { CommandBuilder, Handler, Utils };
