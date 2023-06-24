@@ -181,6 +181,14 @@ const Utils = {
         content.push(message);
 
         return content;
+    },
+
+    sleep: async function sleep(ms) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, ms || 0);
+        });
     }
 }
 
