@@ -4,7 +4,7 @@ const InteractionType = {
     "1": { name: "PING", key: "" },
     "2": { name: "APPLICATION_COMMAND", key: "commandName" },
     "3": { name: "MESSAGE_COMPONENT", key: "customId" },
-    "4": { name: "APPLICATION_COMMAND_AUTOCOMPLETE", key: "" },
+    "4": { name: "APPLICATION_COMMAND_AUTOCOMPLETE", key: "commandName" },
     "5": { name: "MODAL_SUBMIT", key: "customId" }
 };
 
