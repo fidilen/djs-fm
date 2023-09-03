@@ -16,6 +16,8 @@ const ChannelType = {
     "PRIVATE_THREAD": 12
 };
 
+const config = require(process.cwd() + 'config/env.json');
+
 //---------- Command Builder 
 class CommandBuilder {
     constructor(bot_token, client_id, REST, Routes) {
@@ -242,4 +244,4 @@ async function sleep(ms) {
     });
 }
 
-module.exports = { CommandBuilder, Handler, Utils };
+module.exports = { CommandBuilder, Handler, Utils, config };
