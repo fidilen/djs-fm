@@ -16,8 +16,6 @@ const ChannelType = {
     "PRIVATE_THREAD": 12
 };
 
-const config = require(process.cwd() + 'config/env.json');
-
 //---------- Command Builder 
 class CommandBuilder {
     constructor(bot_token, client_id, REST, Routes) {
@@ -63,7 +61,16 @@ class Handler {
     async interaction(interaction, client, utils) {
         const type = InteractionType[interaction.type];
         const handler = type.name;
-        const id = interaction[type.key];
+
+        let id = interaction[type.key];
+
+        const handlerKeys = Object.keys(this.json_handlers[handler]);
+
+        const wildcard = handlerKeys.find(key => key.includes("*") && id.includes(key.replace("*", "")));
+
+        if (wildcard) {
+            id = wildcard;
+        }
 
         if (handler && id && this.json_handlers[handler] && this.json_handlers[handler][id]) {
             await requireParams(this.json_handlers[handler][id], interaction, client, utils);
@@ -244,4 +251,4 @@ async function sleep(ms) {
     });
 }
 
-module.exports = { CommandBuilder, Handler, Utils, config };
+module.exports = { CommandBuilder, Handler, Utils };
