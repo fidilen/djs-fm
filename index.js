@@ -41,7 +41,7 @@ class CommandBuilder {
                 data = await rest.put(this.Routes.applicationCommands(this.client_id), { body: json.commands });
             }
         } catch (error) {
-            console.error(error);
+            throw new Error(error);
         }
 
         return data;
@@ -216,7 +216,7 @@ async function requireParams(module, event, client, utils) {
     try {
         return require(process.cwd() + module)(event, client, utils);
     } catch (e) {
-        console.error(e.message);
+        throw new Error(e);
     }
 }
 
@@ -224,7 +224,7 @@ async function getModule(module) {
     try {
         return require(process.cwd() + module);
     } catch (e) {
-        console.error(e.message);
+        throw new Error(e);
     }
 }
 
@@ -232,7 +232,7 @@ async function _require(module) {
     try {
         return require(module);
     } catch (e) {
-        console.error(e.message);
+        throw new Error(e);
     }
 }
 
